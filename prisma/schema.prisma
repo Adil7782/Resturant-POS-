@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// --- User & Auth ---
+enum UserRole {
+  ADMIN
+  CASHIER
+  MANAGER
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  name         String
+  email        String        @unique
+  role         UserRole      @default(CASHIER)
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+// --- Menu & Inventory ---
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  price       Float
+  cost        Float
+  description String?
+  sku         String?  @unique
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  inventory        Inventory?
+  transactionItems TransactionItem[]
+  inventoryLogs    InventoryLog[]
+  stockAlerts      StockAlert[]
+
+  @@index([categoryId])
+  @@map("products")
+}
+
+model Inventory {
+  id              Int       @id @default(autoincrement())
+  productId       Int       @unique
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantityOnHand  Int       @default(0)
+  reorderLevel    Int       @default(10)
+  lastRestockedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("inventory")
+}
+
+// --- Sales & Transactions ---
+model Transaction {
+  id            Int      @id @default(autoincrement())
+  transactionId String   @unique // e.g., 'ORD-20240101-0001'
+  subtotal      Float
+  tax           Float    @default(0)
+  total         Float
+  paymentMethod String // 'cash', 'card', etc.
+  status        String   @default("completed")
+  createdAt     DateTime @default(now())
+
+  // Cashier Relation
+  cashierId Int
+  cashier   User @relation(fields: [cashierId], references: [id])
+
+  items TransactionItem[]
+
+  @@index([cashierId])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id            Int         @id @default(autoincrement())
+  transactionId Int
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  productId     Int
+  product       Product     @relation(fields: [productId], references: [id])
+  quantity      Int
+  unitPrice     Float
+  lineTotal     Float
+  createdAt     DateTime    @default(now())
+
+  @@index([transactionId])
+  @@index([productId])
+  @@map("transaction_items")
+}
+
+// --- Audit & Monitoring ---
+model InventoryLog {
+  id             Int      @id @default(autoincrement())
+  productId      Int
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type           String // 'sale', 'restock', 'adjustment'
+  quantityChange Int
+  referenceId    String? // transactionId or adjustmentId
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  @@index([productId])
+  @@index([createdAt])
+  @@map("inventory_logs")
+}
+
+model StockAlert {
+  id         Int       @id @default(autoincrement())
+  productId  Int
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  alertType  String // 'low_stock', 'reordered'
+  status     String    @default("active") // 'active', 'resolved'
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+
+  @@index([productId])
+  @@index([status])
+  @@map("stock_alerts")
+}

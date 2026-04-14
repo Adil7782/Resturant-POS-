@@ -42,23 +42,23 @@ export default function ProductForm({ initialData, categories, onSuccess }: Prod
     resolver: zodResolver(productSchema),
     defaultValues: initialData
       ? {
-          name: initialData.name,
-          categoryId: initialData.categoryId,
-          price: initialData.price,
-          cost: initialData.cost,
-          description: initialData.description || "",
-          sku: initialData.sku || "",
-          active: initialData.active,
-        }
+        name: initialData.name,
+        categoryId: initialData.categoryId,
+        price: initialData.price,
+        cost: initialData.cost,
+        description: initialData.description || "",
+        sku: initialData.sku || "",
+        active: initialData.active,
+      }
       : {
-          name: "",
-          categoryId: categories.length > 0 ? categories[0].id : 0,
-          price: 0,
-          cost: 0,
-          description: "",
-          sku: "",
-          active: true,
-        },
+        name: "",
+        categoryId: categories.length > 0 ? categories[0].id : 0,
+        price: 0,
+        cost: 0,
+        description: "",
+        sku: "",
+        active: true,
+      },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
@@ -72,8 +72,9 @@ export default function ProductForm({ initialData, categories, onSuccess }: Prod
         // Create
         await axios.post("/api/products", data);
         toast.success("Product created successfully.");
+
       }
-      
+
       router.refresh();
       if (onSuccess) onSuccess();
     } catch (error: any) {
@@ -107,13 +108,13 @@ export default function ProductForm({ initialData, categories, onSuccess }: Prod
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price ($)</FormLabel>
+                <FormLabel>Price (Rs)</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    step="0.01" 
-                    disabled={isLoading} 
-                    {...field} 
+                  <Input
+                    type="number"
+                    step="0.01"
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -126,13 +127,13 @@ export default function ProductForm({ initialData, categories, onSuccess }: Prod
             name="cost"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Cost ($)</FormLabel>
+                <FormLabel>Cost (Rs)</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    step="0.01" 
-                    disabled={isLoading} 
-                    {...field} 
+                  <Input
+                    type="number"
+                    step="0.01"
+                    disabled={isLoading}
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />

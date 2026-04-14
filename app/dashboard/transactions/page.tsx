@@ -54,7 +54,7 @@ export default async function TransactionsPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${totalSales.toFixed(2)}</div>
+              <div className="text-2xl font-bold">Rs. {totalSales.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">All time</p>
             </CardContent>
           </Card>
@@ -65,7 +65,7 @@ export default async function TransactionsPage() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${avgSale.toFixed(2)}</div>
+              <div className="text-2xl font-bold">Rs. {avgSale.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">Per transaction</p>
             </CardContent>
           </Card>
@@ -100,7 +100,7 @@ export default async function TransactionsPage() {
                       <TableCell>{timeStr}</TableCell>
                       <TableCell className="capitalize">{transaction.payment_method}</TableCell>
                       <TableCell className="text-right font-semibold">
-                        ${parseFloat(String(transaction.total_amount)).toFixed(2)}
+                        Rs.{parseFloat(String(transaction.total_amount)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs dark:bg-green-900 dark:text-green-100">

@@ -54,7 +54,7 @@ export default function DashboardOverview({
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalSales.toFixed(2)}</div>
+            <div className="text-2xl font-bold">Rs. {totalSales.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">{transactions.length} transactions</p>
           </CardContent>
         </Card>
@@ -65,7 +65,7 @@ export default function DashboardOverview({
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${avgTransactionValue.toFixed(2)}</div>
+            <div className="text-2xl font-bold">Rs. {avgTransactionValue.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">Per transaction</p>
           </CardContent>
         </Card>
@@ -126,7 +126,7 @@ export default function DashboardOverview({
                         {new Date(transaction.createdAt).toLocaleDateString()}
                       </p>
                     </div>
-                    <p className="font-semibold">${transaction.total.toFixed(2)}</p>
+                    <p className="font-semibold">Rs. {transaction.total.toFixed(2)}</p>
                   </div>
                 ))}
               </div>

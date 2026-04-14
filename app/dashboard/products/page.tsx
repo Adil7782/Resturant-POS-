@@ -1,18 +1,11 @@
+
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
-import { Plus } from 'lucide-react';
+
 import prisma from '@/lib/prisma';
 import ProductsTable from './_components/products-table';
-import ProductForm from './_components/product-form';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+
+import { ProductDialog } from './_components/product-mini-form';
 
 export const metadata = {
   title: 'Products - Swift Flow',
@@ -21,6 +14,7 @@ export const metadata = {
 
 export default async function ProductsPage() {
   const user = await getSession();
+
 
   if (!user || user.role !== 'admin') {
     redirect('/login');
@@ -52,23 +46,7 @@ export default async function ProductsPage() {
             <h1 className="text-3xl font-bold">Products</h1>
             <p className="text-muted-foreground mt-2">View and manage menu items</p>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Product
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
-                <DialogDescription>
-                  Enter the details for the new product here.
-                </DialogDescription>
-              </DialogHeader>
-              <ProductForm categories={categories} />
-            </DialogContent>
-          </Dialog>
+          <ProductDialog categories={categories} />
         </div>
 
         <ProductsTable products={products} categories={categories} />

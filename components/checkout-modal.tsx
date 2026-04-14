@@ -52,7 +52,7 @@ export default function CheckoutModal({
         <DialogHeader>
           <DialogTitle>Complete Purchase</DialogTitle>
           <DialogDescription>
-            Total: <span className="text-lg font-bold text-primary">${total.toFixed(2)}</span>
+            Total: <span className="text-lg font-bold text-primary">Rs. {total.toFixed(2)}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -83,7 +83,7 @@ export default function CheckoutModal({
 
           <div className="bg-accent p-4 rounded-lg">
             <p className="text-sm text-muted-foreground">Total Amount Due</p>
-            <p className="text-3xl font-bold text-primary mt-1">${total.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-primary mt-1">Rs. {total.toFixed(2)}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { productSchema } from "@/lib/validations/product-schema";
 import { z } from "zod";
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getSession();
 
@@ -12,7 +12,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const productId = parseInt(params.id, 10);
+    const { id } = await params
+    const productId = parseInt(id, 10);
     if (isNaN(productId)) {
       return NextResponse.json({ message: "Invalid product ID" }, { status: 400 });
     }
@@ -43,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getSession();
 
@@ -51,7 +52,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const productId = parseInt(params.id, 10);
+    const { id } = await params
+    const productId = parseInt(id, 10);
     if (isNaN(productId)) {
       return NextResponse.json({ message: "Invalid product ID" }, { status: 400 });
     }

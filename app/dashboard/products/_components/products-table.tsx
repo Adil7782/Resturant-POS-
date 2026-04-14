@@ -51,6 +51,7 @@ export default function ProductsTable({ products, categories }: ProductsTablePro
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = (product: Product) => {
+    console.log("asdf", product)
     setSelectedProduct(product);
     setIsEditModalOpen(true);
   };
@@ -66,7 +67,7 @@ export default function ProductsTable({ products, categories }: ProductsTablePro
     try {
       setIsDeleting(true);
       await axios.delete(`/api/products/${productToDelete}`);
-      toast.success("Product deleted successfully");
+      toast.success("Event has been created")
       setIsDeleteModalOpen(false);
       setProductToDelete(null);
       router.refresh(); // Reflect changes from the server component
@@ -203,7 +204,7 @@ export default function ProductsTable({ products, categories }: ProductsTablePro
             <AlertDialogAction
               onClick={confirmDelete}
               disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-white hover:bg-destructive/90"
             >
               {isDeleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>

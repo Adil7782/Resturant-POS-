@@ -16,6 +16,9 @@ import {
 } from '@/components/ui/table';
 import { toast } from 'sonner';
 import RestockModal from './restock-modal';
+import axios from 'axios';
+import router, { Router } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface InventoryListProps {
   inventory: (Inventory & { name: string })[];
@@ -28,7 +31,7 @@ export default function InventoryList({ inventory, userId }: InventoryListProps)
   const [isRestockOpen, setIsRestockOpen] = useState(false);
   const [isAdjustOpen, setIsAdjustOpen] = useState(false);
   const [adjustmentQty, setAdjustmentQty] = useState(0);
-
+  const router = useRouter();
   const filteredInventory = useMemo(() => {
     return inventory.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -54,25 +57,24 @@ export default function InventoryList({ inventory, userId }: InventoryListProps)
     if (!selectedItem) return;
 
     try {
-      const response = await fetch('/api/inventory/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: selectedItem.productId,
-          quantityChange: quantity,
-          changeType: 'RESTOCK',
-          userId,
-          notes: 'Admin restock'
-        })
+      const response = await axios.post('/api/inventory/update', {
+        productId: selectedItem.productId,
+        quantityChange: quantity,
+        changeType: 'RESTOCK',
+        userId,
+        notes: 'Admin restock'
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Restock failed');
       }
 
       toast.success(`Restocked ${selectedItem.name}`);
+
       setIsRestockOpen(false);
       setSelectedItem(null);
+      router.refresh()
+
       // Refresh would need to be handled by parent
     } catch (error) {
       toast.error('Failed to restock');
@@ -84,19 +86,15 @@ export default function InventoryList({ inventory, userId }: InventoryListProps)
     if (!selectedItem || adjustmentQty === 0) return;
 
     try {
-      const response = await fetch('/api/inventory/update', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: selectedItem.productId,
-          quantityChange: adjustmentQty,
-          changeType: 'ADJUSTMENT',
-          userId,
-          notes: 'Manual adjustment'
-        })
+      const response = await axios.post('/api/inventory/update', {
+        productId: selectedItem.productId,
+        quantityChange: adjustmentQty,
+        changeType: 'ADJUSTMENT',
+        userId,
+        notes: 'Manual adjustment'
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Adjustment failed');
       }
 
@@ -104,6 +102,7 @@ export default function InventoryList({ inventory, userId }: InventoryListProps)
       setIsAdjustOpen(false);
       setSelectedItem(null);
       setAdjustmentQty(0);
+      router.refresh()
     } catch (error) {
       toast.error('Failed to adjust inventory');
       console.error('Adjustment error:', error);

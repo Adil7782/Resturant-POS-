@@ -1,6 +1,5 @@
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
-import { getProducts } from '@/lib/db';
 import POSInterface from '@/components/pos-interface';
 import prisma from '@/lib/prisma';
 

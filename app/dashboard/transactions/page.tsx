@@ -27,7 +27,7 @@ export default async function TransactionsPage() {
   try {
     const transactions = await getTransactions(100);
 
-    const totalSales = transactions.reduce((sum, t) => sum + parseFloat(String(t.total_amount)), 0);
+    const totalSales = transactions.reduce((sum, t) => sum + parseFloat(String(t.total)), 0);
     const avgSale = transactions.length > 0 ? totalSales / transactions.length : 0;
 
     return (
@@ -89,7 +89,7 @@ export default async function TransactionsPage() {
               </TableHeader>
               <TableBody>
                 {transactions.map((transaction) => {
-                  const date = new Date(transaction.created_at);
+                  const date = new Date(transaction.createdAt);
                   const dateStr = date.toLocaleDateString();
                   const timeStr = date.toLocaleTimeString();
 
@@ -98,9 +98,9 @@ export default async function TransactionsPage() {
                       <TableCell className="font-medium">#{transaction.id}</TableCell>
                       <TableCell>{dateStr}</TableCell>
                       <TableCell>{timeStr}</TableCell>
-                      <TableCell className="capitalize">{transaction.payment_method}</TableCell>
+                      <TableCell className="capitalize">{transaction.paymentMethod}</TableCell>
                       <TableCell className="text-right font-semibold">
-                        Rs.{parseFloat(String(transaction.total_amount)).toFixed(2)}
+                        Rs.{parseFloat(String(transaction.total)).toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs dark:bg-green-900 dark:text-green-100">

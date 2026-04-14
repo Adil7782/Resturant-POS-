@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/session';
 import { updateInventory } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     await updateInventory(productId, quantityChange, changeType, userId, notes);
+
 
     return NextResponse.json(
       { message: 'Inventory updated' },
